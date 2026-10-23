@@ -1,0 +1,221 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_1",
+      "username": "admin1",
+      "password": "admin1",
+      "name": "Alex Rivera",
+      "role": "Atleta Master / Admin",
+      "streak": 5,
+      "activeSeconds": 1240,
+      "completedSessions": 3
+    }
+  ],
+  "routines": [
+    {
+      "id": "fuerza-superior",
+      "title": "Fuerza Máxima: Torso Titán",
+      "category": "fuerza",
+      "categoryLabel": "Fuerza",
+      "difficulty": "Intermedio • Avanzado",
+      "duration": "45 min",
+      "estCalories": 380,
+      "description": "Enfoque en desarrollo de fuerza pura, press pesado y tensión mecánica controlada.",
+      "isExpanded": true,
+      "exercises": [
+        {
+          "id": "f1",
+          "name": "Press de Banca con Barra",
+          "sets": 4,
+          "reps": "6 reps",
+          "rest": 90,
+          "completed": false
+        },
+        {
+          "id": "f2",
+          "name": "Remo con Barra Pendlay",
+          "sets": 4,
+          "reps": "6-8 reps",
+          "rest": 90,
+          "completed": false
+        },
+        {
+          "id": "f3",
+          "name": "Press Militar Over-Head",
+          "sets": 3,
+          "reps": "8 reps",
+          "rest": 75,
+          "completed": false
+        },
+        {
+          "id": "f4",
+          "name": "Dominadas Lastradas / Estrictas",
+          "sets": 3,
+          "reps": "Al fallo (6-10)",
+          "rest": 90,
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "pierna-hipertrofia",
+      "title": "Hipertrofia Explosiva: Tren Inferior",
+      "category": "hipertrofia",
+      "categoryLabel": "Hipertrofia",
+      "difficulty": "Avanzado",
+      "duration": "50 min",
+      "estCalories": 450,
+      "description": "Volumen alto, bombeo metabólico y estímulo para cuádriceps, glúteos e isquios.",
+      "isExpanded": false,
+      "exercises": [
+        {
+          "id": "h1",
+          "name": "Sentadilla Trasera Profunda",
+          "sets": 4,
+          "reps": "10-12 reps",
+          "rest": 90,
+          "completed": false
+        },
+        {
+          "id": "h2",
+          "name": "Prensa Inclinada 45°",
+          "sets": 4,
+          "reps": "12-15 reps",
+          "rest": 60,
+          "completed": false
+        },
+        {
+          "id": "h3",
+          "name": "Peso Muerto Rumano con Mancuernas",
+          "sets": 3,
+          "reps": "12 reps",
+          "rest": 75,
+          "completed": false
+        },
+        {
+          "id": "h4",
+          "name": "Elevación de Talones en Máquina",
+          "sets": 4,
+          "reps": "20 reps",
+          "rest": 45,
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "cardio-hiit-burn",
+      "title": "Cardio HIIT: Quema Grasa Extrema",
+      "category": "cardio",
+      "categoryLabel": "Cardio & HIIT",
+      "difficulty": "Todos los niveles",
+      "duration": "25 min",
+      "estCalories": 320,
+      "description": "Intervalos de alta intensidad para máxima capacidad aeróbica y quema calórica.",
+      "isExpanded": false,
+      "exercises": [
+        {
+          "id": "c1",
+          "name": "Burpees Explosivos con Salto",
+          "sets": 5,
+          "reps": "45 seg activo",
+          "rest": 30,
+          "completed": false
+        },
+        {
+          "id": "c2",
+          "name": "Mountain Climbers Rápidos",
+          "sets": 4,
+          "reps": "40 seg activo",
+          "rest": 30,
+          "completed": false
+        },
+        {
+          "id": "c3",
+          "name": "Saltos Dobles a la Cuerda",
+          "sets": 4,
+          "reps": "50 seg activo",
+          "rest": 30,
+          "completed": false
+        },
+        {
+          "id": "c4",
+          "name": "Sprints en el Sitio / High Knees",
+          "sets": 4,
+          "reps": "30 seg sprint",
+          "rest": 30,
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "movilidad-core",
+      "title": "Movilidad Articular & Core Shield",
+      "category": "movilidad",
+      "categoryLabel": "Movilidad",
+      "difficulty": "Salud & Recuperación",
+      "duration": "20 min",
+      "estCalories": 150,
+      "description": "Prevención de lesiones, descompresión espinal y estabilidad del core profundo.",
+      "isExpanded": false,
+      "exercises": [
+        {
+          "id": "m1",
+          "name": "Plancha Isométrica con Toque de Hombros",
+          "sets": 3,
+          "reps": "45 seg",
+          "rest": 45,
+          "completed": false
+        },
+        {
+          "id": "m2",
+          "name": "Deadbug Controlado con Respiración",
+          "sets": 3,
+          "reps": "12 por lado",
+          "rest": 45,
+          "completed": false
+        },
+        {
+          "id": "m3",
+          "name": "Gato-Camello & Rotaciones Torácicas",
+          "sets": 2,
+          "reps": "10 ciclos",
+          "rest": 30,
+          "completed": false
+        },
+        {
+          "id": "m4",
+          "name": "Estiramiento del Psoas y Flexores de Cadera",
+          "sets": 2,
+          "reps": "45s x pierna",
+          "rest": 30,
+          "completed": false
+        }
+      ]
+    }
+  ],
+  "historyLog": [
+    {
+      "id": "hist-1",
+      "exerciseName": "Press Militar Over-Head",
+      "routineTitle": "Fuerza Máxima: Torso Titán",
+      "timeString": "Ayer, 18:30",
+      "calories": 30,
+      "sets": 3
+    },
+    {
+      "id": "hist-2",
+      "exerciseName": "Sentadilla Trasera Profunda",
+      "routineTitle": "Hipertrofia Explosiva: Tren Inferior",
+      "timeString": "Ayer, 18:15",
+      "calories": 35,
+      "sets": 4
+    }
+  ],
+  "sessions": {
+    "token_059aa55ed90f55ce70457c03ba5c712d8e805f6efafde3d5": {
+      "userId": "usr_admin_1",
+      "createdAt": 1792534665564,
+      "expiresAt": 1793139465564
+    }
+  }
+}

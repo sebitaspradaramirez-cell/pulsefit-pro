@@ -1,0 +1,13 @@
+{
+  "name": "pulsefit-pro",
+  "version": "1.0.0",
+  "description": "Plataforma de Entrenamiento de Alto Rendimiento con Frontend Moderno y Backend Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["fitness", "training", "workout-tracker", "fullstack", "nodejs"],
+  "author": "Antigravity Senior Engineer",
+  "license": "MIT"
+}

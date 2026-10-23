@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>PULSEFIT Pro | Plataforma de Entrenamiento y Control de Progreso</title>
+  
+  <!-- Tipografías Oficiales: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Iconografía Deportiva Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  
+  <!-- Hoja de Estilos Adaptativa (Desktop + Mobile) -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="adaptive-loading">
+  <!-- Canvas para partículas de celebración -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <!-- ====================================================================
+       PANTALLA DE LOGIN / AUTENTICACIÓN ADAPTATIVA (PC + MÓVIL)
+       ==================================================================== -->
+  <div id="authOverlay" class="auth-overlay active" role="dialog" aria-modal="true">
+    <div class="auth-card glass-card">
+      
+      <!-- Lado Izquierdo en PC (Showcase de la plataforma) / Oculto en móvil -->
+      <div class="auth-desktop-hero">
+        <div class="hero-brand">
+          <div class="brand-icon pulse-glow">
+            <i class="ph-bold ph-lightning"></i>
+          </div>
+          <h2>PULSE<span>FIT</span> PRO</h2>
+          <span class="hero-tagline">Athletic Operating System</span>
+        </div>
+
+        <p class="hero-desc">
+          Plataforma de alto rendimiento para registrar series, cronometrar descansos y monitorizar tu progreso en tiempo real desde cualquier dispositivo.
+        </p>
+
+        <div class="hero-features-list">
+          <div class="feature-item">
+            <i class="ph-bold ph-check-circle"></i>
+            <span>Planes de Fuerza, Hipertrofia, Cardio y Core</span>
+          </div>
+          <div class="feature-item">
+            <i class="ph-bold ph-timer"></i>
+            <span>Temporizador Circular SVG con Web Audio API</span>
+          </div>
+          <div class="feature-item">
+            <i class="ph-bold ph-chart-line-up"></i>
+            <span>Historial y métricas sincronizadas en el Backend</span>
+          </div>
+        </div>
+
+        <div class="hero-device-pill">
+          <i class="ph-bold ph-devices"></i>
+          <span>Interfaz Adaptativa PC / Smartphone</span>
+        </div>
+      </div>
+
+      <!-- Lado Derecho (Formulario de Acceso) -->
+      <div class="auth-form-side">
+        <div class="auth-brand-mobile">
+          <div class="brand-icon pulse-glow">
+            <i class="ph-bold ph-lightning"></i>
+          </div>
+          <h2>PULSE<span>FIT</span> PRO</h2>
+          <p class="auth-subtitle">Acceso de Atleta & Administración</p>
+        </div>
+
+        <!-- Credencial sugerida rápida -->
+        <div class="quick-credentials-hint" id="autoFillCredentialsBtn" title="Clic para rellenar automáticamente">
+          <i class="ph-bold ph-key"></i>
+          <span>Credenciales de acceso: <strong>admin1</strong> / <strong>admin1</strong></span>
+        </div>
+
+        <form id="loginForm" class="auth-form" autocomplete="on">
+          <div id="loginErrorMessage" class="auth-error-msg" style="display: none;"></div>
+
+          <div class="form-group">
+            <label for="loginUsername"><i class="ph-bold ph-user"></i> Usuario</label>
+            <div class="input-wrapper">
+              <input type="text" id="loginUsername" placeholder="admin1" required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword"><i class="ph-bold ph-lock-key"></i> Contraseña</label>
+            <div class="input-wrapper">
+              <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" id="togglePasswordVisibilityBtn" class="input-action-btn" title="Mostrar/ocultar contraseña">
+                <i class="ph-bold ph-eye" id="passwordEyeIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="control-btn primary auth-submit-btn">
+            <i class="ph-bold ph-sign-in"></i>
+            <span id="loginBtnText">Ingresar a la Plataforma</span>
+          </button>
+        </form>
+
+        <div class="auth-footer-note">
+          <i class="ph-bold ph-database"></i>
+          <span>Conectado a Supabase PostgreSQL & Node.js</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       CONTENEDOR PRINCIPAL DE LA APLICACIÓN (ADAPTABLE PC / CELULAR)
+       ==================================================================== -->
+  <div class="app-layout" id="mainAppContent" style="display: none;">
+    
+    <!-- 1. CABECERA ADAPTATIVA -->
+    <header class="app-header glass-card">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="ph-bold ph-lightning"></i>
+        </div>
+        <div class="brand-text">
+          <h1>PULSE<span>FIT</span></h1>
+          <p class="tagline">Performance Tracker</p>
+        </div>
+      </div>
+
+      <!-- Menú de Navegación Exclusivo para PC / Desktop -->
+      <nav class="desktop-header-nav" aria-label="Navegación Desktop">
+        <button class="desktop-nav-btn active" data-view="routines" id="desktopNavRoutines">
+          <i class="ph-bold ph-barbell"></i>
+          <span>Rutinas</span>
+        </button>
+        <button class="desktop-nav-btn" data-view="history" id="desktopNavHistory">
+          <i class="ph-bold ph-chart-line-up"></i>
+          <span>Mi Progreso</span>
+          <span class="desktop-badge" id="desktopHistoryBadge">0</span>
+        </button>
+        <button class="desktop-nav-btn" id="desktopNavTimerTrigger">
+          <i class="ph-bold ph-timer"></i>
+          <span>Temporizador</span>
+        </button>
+      </nav>
+
+      <div class="header-badges">
+        <!-- Indicador de Dispositivo Activo (PC vs Móvil) -->
+        <div class="device-badge" id="deviceIndicatorBadge" title="Visualización adaptada a tu pantalla">
+          <i class="ph-bold ph-desktop" id="deviceBadgeIcon"></i>
+          <span id="deviceBadgeText">PC Desktop</span>
+        </div>
+
+        <!-- Perfil de usuario autenticado -->
+        <div class="user-profile-badge" id="userProfileBadge" title="Sesión activa">
+          <div class="user-avatar-mini">
+            <i class="ph-bold ph-user-circle"></i>
+          </div>
+          <div class="user-meta-header">
+            <span class="user-name-txt" id="headerUsername">admin1</span>
+            <span class="user-role-tag" id="headerUserRole">Admin</span>
+          </div>
+          <button id="logoutBtn" class="logout-mini-btn" title="Cerrar sesión" aria-label="Cerrar sesión">
+            <i class="ph-bold ph-sign-out"></i>
+          </button>
+        </div>
+
+        <div class="streak-badge" title="Racha consecutiva de entrenamiento">
+          <i class="ph-fill ph-fire"></i>
+          <span id="streakCount">5</span> d
+        </div>
+
+        <button id="themeToggleBtn" class="icon-btn" title="Alternar modo visual" aria-label="Cambiar tema">
+          <i class="ph-bold ph-moon-stars"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. RESUMEN EN TIEMPO REAL (DISEÑO HORIZONTAL EN PC / COMPACTO EN MÓVIL) -->
+    <section class="daily-summary glass-card">
+      <div class="summary-left-block">
+        <div class="summary-title-row">
+          <div>
+            <span class="sub-title">Sesión en tiempo real</span>
+            <h2 id="currentDayTitle">Fuerza & Condición Física</h2>
+          </div>
+          <div class="progress-percentage-bubble">
+            <span id="globalPercentageText">0%</span>
+          </div>
+        </div>
+
+        <!-- Barra de progreso visual con efecto neón -->
+        <div class="progress-bar-container">
+          <div class="progress-bar-track">
+            <div id="globalProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <div class="progress-labels">
+            <span><span id="completedCount">0</span> de <span id="totalCount">0</span> series completadas hoy</span>
+            <span id="caloriesBurnedEst"><i class="ph-bold ph-flame"></i> ~0 kcal</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Métricas instantáneas (Grid horizontal en PC) -->
+      <div class="quick-stats-grid">
+        <div class="stat-pill">
+          <i class="ph-bold ph-timer"></i>
+          <div>
+            <span class="stat-val" id="activeTimeCounter">00:00</span>
+            <span class="stat-lbl">Tiempo activo</span>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <i class="ph-bold ph-barbell"></i>
+          <div>
+            <span class="stat-val" id="totalVolume">16</span>
+            <span class="stat-lbl">Ejercicios meta</span>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <i class="ph-bold ph-trophy"></i>
+          <div>
+            <span class="stat-val" id="currentLevel">Nivel 4</span>
+            <span class="stat-lbl">Atleta Élite</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SELECTOR DE VISTAS (Visible en móvil / tablet) -->
+    <div class="main-view-switcher glass-card" id="mobileViewSwitcher">
+      <button id="viewRoutinesBtn" class="view-switch-btn active" data-view="routines">
+        <i class="ph-bold ph-barbell"></i>
+        <span>Rutinas de Entrenamiento</span>
+      </button>
+      <button id="viewHistoryBtn" class="view-switch-btn" data-view="history">
+        <i class="ph-bold ph-chart-line-up"></i>
+        <span>Mi Progreso e Historial</span>
+        <span class="log-count-badge" id="historyCountBadge">0</span>
+      </button>
+    </div>
+
+    <!-- 4. DASHBOARD PRINCIPAL (2 COLUMNAS EN PC / 1 COLUMNA EN MÓVIL) -->
+    <main class="main-dashboard">
+      
+      <!-- COLUMNA PRINCIPAL IZQUIERDA: CONTENIDO DE RUTINAS O HISTORIAL -->
+      <div class="dashboard-content-column">
+        
+        <!-- VISTA A: PANEL DE RUTINAS -->
+        <div id="routinesViewContainer" class="view-panel active">
+          <section class="routines-section">
+            <div class="section-title-wrap">
+              <div class="title-with-pill">
+                <h3>Planes de Entrenamiento</h3>
+                <span class="badge-count" id="routinesCountBadge">4</span>
+              </div>
+              <button id="resetProgressBtn" class="text-action-btn" title="Reiniciar marcas del día actual">
+                <i class="ph-bold ph-arrow-counter-clockwise"></i> Reiniciar Día
+              </button>
+            </div>
+
+            <!-- Filtro por categoría muscular (Scroll fluido en móvil / Barra en PC) -->
+            <nav class="categories-nav" aria-label="Filtro de rutinas">
+              <button class="cat-pill active" data-category="all">
+                <i class="ph-bold ph-squares-four"></i> Todas
+              </button>
+              <button class="cat-pill" data-category="fuerza">
+                <i class="ph-bold ph-barbell"></i> Fuerza
+              </button>
+              <button class="cat-pill" data-category="hipertrofia">
+                <i class="ph-bold ph-trend-up"></i> Hipertrofia
+              </button>
+              <button class="cat-pill" data-category="cardio">
+                <i class="ph-bold ph-heartbeat"></i> Cardio & HIIT
+              </button>
+              <button class="cat-pill" data-category="movilidad">
+                <i class="ph-bold ph-person-simple-walk"></i> Movilidad
+              </button>
+            </nav>
+
+            <!-- Listado dinámico de cards -->
+            <div id="routinesList" class="routines-list"></div>
+          </section>
+        </div>
+
+        <!-- VISTA B: CONTROL TOTAL DE PROGRESO E HISTORIAL DE ACTIVIDAD -->
+        <div id="historyViewContainer" class="view-panel">
+          <section class="history-section glass-card">
+            <div class="history-top-bar">
+              <div>
+                <h3>Centro de Progreso y Registros</h3>
+                <p class="history-subtitle">Control de todo lo que has realizado y superado</p>
+              </div>
+              <button id="clearHistoryBtn" class="text-action-btn danger" title="Limpiar historial">
+                <i class="ph-bold ph-trash"></i> Vaciar Log
+              </button>
+            </div>
+
+            <!-- Tarjetas de métricas históricas acumuladas -->
+            <div class="history-kpis-grid">
+              <div class="kpi-card">
+                <div class="kpi-icon"><i class="ph-bold ph-check-fat"></i></div>
+                <div class="kpi-data">
+                  <span class="kpi-val" id="histTotalCompleted">0</span>
+                  <span class="kpi-lbl">Series registradas</span>
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-icon energy"><i class="ph-bold ph-flame"></i></div>
+                <div class="kpi-data">
+                  <span class="kpi-val" id="histTotalCalories">0 kcal</span>
+                  <span class="kpi-lbl">Calorías acumuladas</span>
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-icon cyan"><i class="ph-bold ph-clock"></i></div>
+                <div class="kpi-data">
+                  <span class="kpi-val" id="histTotalTime">00:00</span>
+                  <span class="kpi-lbl">Tiempo acumulado</span>
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-icon violet"><i class="ph-bold ph-medal"></i></div>
+                <div class="kpi-data">
+                  <span class="kpi-val" id="histCompletedSessions">0</span>
+                  <span class="kpi-lbl">Sesiones 100%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actividad de la semana actual -->
+            <div class="weekly-tracker-card">
+              <h4>Constancia Semanal</h4>
+              <div class="week-days-row" id="weeklyDaysRow"></div>
+            </div>
+
+            <!-- Timeline cronológico de todo lo realizado -->
+            <div class="timeline-container">
+              <div class="timeline-header">
+                <h4>Historial Cronológico de Actividad</h4>
+                <span id="timelineCountNote" class="count-note">0 registros</span>
+              </div>
+              <div id="activityTimelineList" class="activity-timeline-list"></div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+
+      <!-- COLUMNA DERECHA EN PC (STICKY) / INFERIOR EN MÓVIL: TEMPORIZADOR INTEGRADO -->
+      <aside class="timer-section" id="timerSectionWrapper">
+        <div class="sticky-timer-wrapper">
+          <div class="glass-card timer-card">
+            
+            <!-- Pestañas del temporizador -->
+            <div class="timer-tabs">
+              <button id="tabCountdown" class="timer-tab active" data-mode="countdown">
+                <i class="ph-bold ph-hourglass-high"></i> Descanso / Serie
+              </button>
+              <button id="tabStopwatch" class="timer-tab" data-mode="stopwatch">
+                <i class="ph-bold ph-timer"></i> Cronómetro
+              </button>
+            </div>
+
+            <!-- Información del ejercicio actual -->
+            <div class="current-exercise-timer-info">
+              <span class="badge-accent" id="timerBadgeTag">INTERVALO</span>
+              <h4 id="timerCurrentExercise">Descanso de Serie</h4>
+              <p id="timerCurrentMeta">Prepárate para la siguiente ronda</p>
+            </div>
+
+            <!-- Display circular SVG -->
+            <div class="timer-visual-container">
+              <svg class="timer-svg" viewBox="0 0 240 240">
+                <defs>
+                  <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00FF87" />
+                    <stop offset="100%" stop-color="#60EFFF" />
+                  </linearGradient>
+                </defs>
+                <circle class="timer-circle-bg" cx="120" cy="120" r="105"></circle>
+                <circle id="timerCircleProgress" class="timer-circle-fg" cx="120" cy="120" r="105"></circle>
+              </svg>
+              
+              <div class="timer-digits-wrap">
+                <div id="timerDisplay" class="timer-digits">01:00</div>
+                <span id="timerSubStatus" class="timer-sub-status">Listo</span>
+              </div>
+            </div>
+
+            <!-- Presets rápidos -->
+            <div id="timerPresets" class="timer-presets">
+              <button class="preset-btn" data-time="30">30s</button>
+              <button class="preset-btn active" data-time="60">60s</button>
+              <button class="preset-btn" data-time="90">90s</button>
+              <button class="preset-btn" data-time="120">2m</button>
+            </div>
+
+            <!-- Controles principales -->
+            <div class="timer-main-controls">
+              <button id="timerAdjustMinus" class="control-btn secondary" title="Quitar 15 segundos">
+                <i class="ph-bold ph-minus"></i> 15s
+              </button>
+
+              <button id="timerPlayPauseBtn" class="control-btn primary pulse-glow" title="Iniciar">
+                <i class="ph-fill ph-play" id="playIcon"></i>
+                <span id="playBtnText">Iniciar</span>
+              </button>
+
+              <button id="timerAdjustPlus" class="control-btn secondary" title="Sumar 15 segundos">
+                <i class="ph-bold ph-plus"></i> 15s
+              </button>
+
+              <button id="timerResetBtn" class="control-btn text" title="Reiniciar">
+                <i class="ph-bold ph-arrow-counter-clockwise"></i>
+              </button>
+            </div>
+
+            <!-- Atajos de teclado en PC -->
+            <div class="desktop-keyboard-hints">
+              <span><kbd>Espacio</kbd> Iniciar/Pausa</span>
+              <span><kbd>R</kbd> Reset</span>
+              <span><kbd>1-4</kbd> Presets</span>
+            </div>
+
+            <!-- Sonido de aviso -->
+            <div class="timer-footer-options">
+              <label class="toggle-control">
+                <input type="checkbox" id="audioToggle" checked>
+                <span class="switch"></span>
+                <span class="label-txt"><i class="ph-bold ph-speaker-high"></i> Sonido fin de serie</span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- 5. BARRA DE NAVEGACIÓN MÓVIL INFERIOR (Solo visible en smartphone / tablet) -->
+    <nav class="mobile-bottom-nav glass-card" aria-label="Navegación Móvil">
+      <button class="nav-item active" id="mobileNavRoutines">
+        <i class="ph-bold ph-barbell"></i>
+        <span>Rutinas</span>
+      </button>
+      <button class="nav-item" id="mobileNavHistory">
+        <i class="ph-bold ph-chart-line-up"></i>
+        <span>Progreso</span>
+      </button>
+      <button class="nav-item" id="mobileNavTimer">
+        <i class="ph-bold ph-timer"></i>
+        <span>Timer</span>
+      </button>
+      <button class="nav-item" id="quickLogBtn">
+        <i class="ph-bold ph-check-circle"></i>
+        <span>Completar</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- 6. MODAL DE FELICITACIÓN AL COMPLETAR RUTINA -->
+  <div id="congratsModal" class="modal-overlay" role="dialog" aria-hidden="true">
+    <div class="modal-card glass-card">
+      <div class="modal-badge-glow">
+        <i class="ph-fill ph-trophy"></i>
+      </div>
+      <h3>¡Sesión Completada con Éxito! 🔥</h3>
+      <p id="congratsMessage">Has terminado todos los ejercicios previstos. Tu sesión ha quedado registrada en tu historial de progreso.</p>
+      
+      <div class="congrats-stats">
+        <div class="c-stat">
+          <span class="c-val" id="modalFinalTime">18:42</span>
+          <span class="c-lbl">Tiempo Activo</span>
+        </div>
+        <div class="c-stat">
+          <span class="c-val" id="modalFinalCal">450</span>
+          <span class="c-lbl">Kcal Estimadas</span>
+        </div>
+        <div class="c-stat">
+          <span class="c-val" id="modalFinalDone">100%</span>
+          <span class="c-lbl">Completado</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="closeModalBtn" class="control-btn primary">Guardar y Ver Historial</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor flotante para notificaciones Toast -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- 1. SDK Oficial de Supabase v2 (CDN de alta velocidad) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- 2. Cliente y Servicio de Supabase -->
+  <script src="supabaseClient.js"></script>
+  <!-- 3. Lógica modular de la aplicación, adaptación de dispositivo y Backend -->
+  <script src="app.js"></script>
+</body>
+</html>
